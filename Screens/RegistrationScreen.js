@@ -1,78 +1,96 @@
-import React from 'react';
-import { StatusBar, View, ActivityIndicator, Text, StyleSheet, TextInput, Button, KeyboardAvoidingView } from 'react-native';
+import { useState } from 'react';
+import { View, Text, StyleSheet, TextInput, Button, KeyboardAvoidingView } from 'react-native';
 
-// Roboto 
-// 30 medium 
-// 17 medium
-// 16 regular
-// 16 medium
-// 13 bold
-// 13 regular
-// 11 regular
-// 10 regular
-
-// inter 
-// 16 medium
-
-// const STYLES = ['default', 'dark-content', 'light-content'];
-// const TRANSITIONS = ['fade', 'slide', 'none'];
 
 // const onPressShow = () => {
 //     setTitleText("Bird's Nest [pressed]");
 // };
 
+
 const RegistrationScreen = () => {
-    const [statusBarStyle, setStatusBarStyle] = useState(STYLES[0]);
-    const [statusBarTransition, setStatusBarTransition] = useState(TRANSITIONS[0],);
+    const [focusedInput, setFocusedInput] = useState(null);
 
-    const [text, onChangeText] = React.useState('');
-
-    // const changeStatusBarVisibility = () => setHidden(!hidden);
-
-    // const changeStatusBarStyle = () => {
-    //     const styleId = STYLES.indexOf(statusBarStyle) + 1;
-    //     if (styleId === STYLES.length) {
-    //       setStatusBarStyle(STYLES[0]);
-    //     } else {
-    //       setStatusBarStyle(STYLES[styleId]);
-    //     }
-    //   };
-    
-    //   const changeStatusBarTransition = () => {
-    //     const transition = TRANSITIONS.indexOf(statusBarTransition) + 1;
-    //     if (transition === TRANSITIONS.length) {
-    //       setStatusBarTransition(TRANSITIONS[0]);
-    //     } else {
-    //       setStatusBarTransition(TRANSITIONS[transition]);
-    //     }
-    //   };
+    const handleFocus = (inputName) => {
+      setFocusedInput(inputName);
+    };
+  
+    const handleBlur = () => {
+      setFocusedInput(null);
+    };
+  
+    const isInputFocused = (inputName) => {
+      return focusedInput === inputName;
+    };
 
     return (
-        <SafeAreaView>
-     {/* <StatusBar
-    //     animated={true}
-    //     backgroundColor="#61dafb"
-    //     barStyle={statusBarStyle}
-    //     showHideTransition={statusBarTransition}
-    //     hidden={hidden}
-    // /> */}
-    <KeyboardAvoidingView // автоматична підгонка висоти, розташування або нижнього паддінга компонента на основі висоти клавіатури, щоб компоненту залишатися видимим поки віртуальна клава відображена
+        <View>
+            <View style={styles.container}>
+                <View>
+                    <Text style={styles.title}>Реєстрація</Text> 
+                </View>
+                <View>
+                    <TextInput 
+                        placeholder="Логін" 
+                        placeholderTextColor='rgb(189, 189, 189)' 
+                        autoFocus={true}  // одразу в фокусі при відкритті додатку
+                        // clearButtonMode='always'  // кнопка очищення поля - тільки для iOS
+                        // enterKeyHint: done // у відповідь після заповнення покаже "done"- тільки для iOS
+                        style={[styles.input, isInputFocused('input1') && styles.focusedInput]} 
+                        onFocus={() => handleFocus('input1')}
+                        onBlur={handleBlur}
+                    />
+                        {/* onChangeText={onChangeText} */}
+
+                    <TextInput 
+                        placeholder="Адреса електронної пошти" 
+                        placeholderTextColor='rgb(189, 189, 189)' 
+                        keyboardType='email-address' 
+                        style={[styles.input, isInputFocused('input2') && styles.focusedInput]} 
+                        onFocus={() => handleFocus('input2')}
+                        onBlur={handleBlur}
+                    />
+                        {/* onChangeText={onChangeText} */}
+
+                    <TextInput 
+                        placeholder="Пароль" 
+                        placeholderTextColor='rgb(189, 189, 189)' 
+                        secureTextEntry={true} // приховане введення для паролів (крапочки, але остання літера завжди видима)
+                        style={[styles.input, isInputFocused('input3') && styles.focusedInput]} 
+                        onFocus={() => handleFocus('input3')}
+                        onBlur={handleBlur}
+                    />
+                    {/* onChangeText={onChangeText} 
+                    onChangeText={text => onChangeText(text)}
+                    multiline: true,
+                    numberOfLines={4}
+                    maxLength={40}
+                    value={value}
+                    autoCorrect: true, */}
+
+                    <Text>Показати</Text> 
+                    {/* onPress={onPressShow} */}
+                </View>
+            </View>
+        </View>
+    );
+}
+
+
+    // const [text, onChangeText] = React.useState('');
+
+    // return (
+    //     <View>
+    {/* <KeyboardAvoidingView // автоматична підгонка висоти, розташування або нижнього паддінга компонента на основі висоти клавіатури, щоб компоненту залишатися видимим поки віртуальна клава відображена
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
-    >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.inner}>
-                <ActivityIndicator size="small" color="#0000ff" />
-                <View>
-                    <Text>Реєстрація</Text>
-                </View>
-                <TextInput placeholder="Логін" onChangeText={onChangeText} style={styles.textInput} />
-                <TextInput placeholder="Адреса електронної пошти" onChangeText={onChangeText} style={styles.textInput} />
-                <TextInput placeholder="Пароль" onChangeText={onChangeText} style={styles.textInput} />
-                <Text style={styles.visibleText} onPress={onPressShow}>Показати</Text>
+    > */}
+        {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
+
+            // <View style={styles.inner}>
+
 
                 {/* <View style={styles.btnContainer}> */}
-                <Button
+                {/* <Button
                     onPress={onPressLearnMore}
                     // onPress={() => Alert.alert('Right button pressed')}
                     // onPress={() => null}
@@ -80,57 +98,66 @@ const RegistrationScreen = () => {
                     color="FF6C00" 
                     accessibilityLabel="Press to sign up"
                     disabled="true"
-                />
+                /> */}
                 {/* </View> */}
-                <Text>Вже є акаунт? Увійти</Text>
-            </View>
-        </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
-    </SafeAreaView>
-    )
+
+                {/* <TouchableHighlight onPress={onPress}>  // кнопка при натисканні затемнюється
+                    <View style={styles.button}>
+                    <Text>Touch Here</Text>
+                    </View>
+                </TouchableHighlight> */}
+                {/* button: {
+                    alignItems: 'center',
+                    backgroundColor: '#DDDDDD',
+                    padding: 10,
+                }, */}
+
+                {/* <Text>Вже є акаунт? Увійти</Text> */}
+            // </View>
+        {/* </TouchableWithoutFeedback> */}
+    {/* </KeyboardAvoidingView> */}
+//     </View>
+//     )
+
 
     const styles = StyleSheet.create({
         container: {
-          flex: 1,
-    //       justifyContent: 'center',
-    //       marginHorizontal: 16,
+            // flex: 1,
+            paddingHorizontal: 16,
+            justifyContent: 'center',
         },
-        inner: {
-            padding: 24,
-            flex: 1,
-            justifyContent: 'space-around',
-        },
-    //     title: {
-    //       textAlign: 'center',
-    //       marginVertical: 8,
-    //     },
-        textInput: {
-            height: 40,
-            borderColor: '#000000',
-            borderBottomWidth: 1,
-            marginBottom: 36,
-            // height: 40,
-            // margin: 12,
-            // borderWidth: 1,
-            // padding: 10,
-            // textAlign: 'left', 'center', 'right')
+        
+        // inner: {
+        //     padding: 24,
+        //     flex: 1,
+        //     justifyContent: 'space-around',
+        // },
+        title: {
+            textAlign: 'center',
+            fontFamily: 'Roboto', 
+            fontWeight: '500',
+            fontSize: 30,
+            textShadowOffset: { width: 0, height: 4 }, // зміщення тіні по вертикалі
+            textShadowRadius: 4, // радіус розмитості тіні
+            textShadowColor: 'rgba(0, 0, 0, 0.25)', // прозорість тіні
+            marginBottom: 32,
 
-            // placeholderTextColor
-            // multiline: true,
-            // numberOfLines={4}
-            // maxLength={40}
-            // onChangeText={text => onChangeText(text)}
-            // value={value}
-
-            // autoCorrect: true,
-            // autoFocus: true,
-            // caretHidden: true // введення приховане
-            // secureTextEntry: true, // для паролів
-            // clearButtonMode: always  // кнопка очищення поля
-            // enterKeyHint: done // визначає, який текст має бути відображений у відповідь // не на андроїді
-            // keyboardAppearance: default', 'light', 'dark
-            // keyboardType: email-address, 
         },
+        input: {
+            height: 50,
+            color: 'rgb(33, 33, 33)', // колір тексту, що вводить користувач
+            backgroundColor: 'rgb(246, 246, 246)',
+            borderColor: 'rgb(232, 232, 232)',
+            borderWidth: 1,
+            borderRadius: 8,
+            paddingLeft: 16,
+            marginBottom: 15,
+        },
+        focusedInput: {
+            backgroundColor: 'rgb(255, 255, 255)',
+            borderColor: 'rgb(255, 108, 0)', 
+        },
+
         // btnContainer: {
         //     backgroundColor: 'white',
         //     marginTop: 12,
@@ -147,6 +174,6 @@ const RegistrationScreen = () => {
     //       borderBottomWidth: StyleSheet.hairlineWidth,
     //     },
     });
-}
+
 
 export default RegistrationScreen;

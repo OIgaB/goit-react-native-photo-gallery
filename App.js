@@ -1,8 +1,34 @@
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { RegistrationScreen, LoginScreen, PostsScreen } from './Screens/RegistrationScreen.js'
+import { ActivityIndicator, View, StyleSheet } from 'react-native';
+import { RegistrationScreen } from './Screens/index.js'
+// import { RegistrationScreen, LoginScreen, PostsScreen } from './Screens/RegistrationScreen.js'
 
+    // const STYLES = ['default', 'dark-content', 'light-content'];
+    // const TRANSITIONS = ['fade', 'slide', 'none'];
+
+    // const [statusBarStyle, setStatusBarStyle] = useState(STYLES[0]);
+    // const [statusBarTransition, setStatusBarTransition] = useState(TRANSITIONS[0],);
+
+    // const changeStatusBarVisibility = () => setHidden(!hidden);
+
+    // const changeStatusBarStyle = () => {
+    //     const styleId = STYLES.indexOf(statusBarStyle) + 1;
+    //     if (styleId === STYLES.length) {
+    //       setStatusBarStyle(STYLES[0]);
+    //     } else {
+    //       setStatusBarStyle(STYLES[styleId]);
+    //     }
+    //   };
+    
+    //   const changeStatusBarTransition = () => {
+    //     const transition = TRANSITIONS.indexOf(statusBarTransition) + 1;
+    //     if (transition === TRANSITIONS.length) {
+    //       setStatusBarTransition(TRANSITIONS[0]);
+    //     } else {
+    //       setStatusBarTransition(TRANSITIONS[transition]);
+    //     }
+    //   };
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -12,18 +38,30 @@ export default function App() {
     'Inter-Black': require('./assets/fonts/Inter-Medium.ttf'),
   });
 
-  if(!fontsLoaded) {
+  if(!fontsLoaded) { // якщо шрифти не підвантажились, нічого не відображати
     return null;
   }
 
   return (
     <View style={styles.container}>
-      <Text>This is my first homework on React native!</Text>
-      <StatusBar style="auto" />
+
+      {/* лодер */}
+      <ActivityIndicator size="small" color="#0000ff" />   
+
+      {/* StatusBar - верхня панель з даними (заряд, інтернет...) */}
+      {/* style="auto" - прозорий колір панелі, контент налазить на дані статус-бара */}
+      <StatusBar 
+        style="auto" 
+        // animated={true}
+        // backgroundColor="#61dafb"
+        // barStyle={statusBarStyle}
+        // showHideTransition={statusBarTransition}
+        // hidden={hidden} 
+      /> 
 
       <RegistrationScreen />
-      <LoginScreen />
-      <PostsScreen />
+      {/* <LoginScreen />
+      <PostsScreen /> */}
     </View>
   );
 }
@@ -32,8 +70,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
 });
 
@@ -43,4 +81,3 @@ const styles = StyleSheet.create({
 //   font-size: 11px;
 //   color: #141823;
 // }
-
