@@ -1,14 +1,11 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, KeyboardAvoidingView } from 'react-native';
-
-
-// const onPressShow = () => {
-//     setTitleText("Bird's Nest [pressed]");
-// };
+import { View, Image, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 
 
 const RegistrationScreen = () => {
     const [focusedInput, setFocusedInput] = useState(null);
+    const [isClicked, setIsClicked] = useState(false);
+    const [passwordVisible, setPasswordVisible] = useState(false);
 
     const handleFocus = (inputName) => {
       setFocusedInput(inputName);
@@ -22,8 +19,26 @@ const RegistrationScreen = () => {
       return focusedInput === inputName;
     };
 
+    const handleLinkClick = () => {
+        setIsClicked(true);
+    };
+    
+    const handlePasswordClick = () => {
+        if (passwordVisible === false) {
+            setPasswordVisible(true);
+            return;
+        }
+        setPasswordVisible(false);
+    };
+
+
     return (
         <View>
+
+            <View style={styles.wrapper}> 
+                <Image source={require('./../assets/images/background-img.jpg')} style={styles.bgrImage} />
+            </View>
+
             <View style={styles.container}>
                 <View>
                     <Text style={styles.title}>Реєстрація</Text> 
@@ -40,7 +55,6 @@ const RegistrationScreen = () => {
                         onBlur={handleBlur}
                     />
                         {/* onChangeText={onChangeText} */}
-
                     <TextInput 
                         placeholder="Адреса електронної пошти" 
                         placeholderTextColor='rgb(189, 189, 189)' 
@@ -50,26 +64,42 @@ const RegistrationScreen = () => {
                         onBlur={handleBlur}
                     />
                         {/* onChangeText={onChangeText} */}
+                    <View style={{position: 'relative'}}>
+                        <TextInput 
+                            placeholder="Пароль" 
+                            placeholderTextColor='rgb(189, 189, 189)'                         
+                            secureTextEntry={!passwordVisible} // secureTextEntry={true} - приховане введення для паролів (крапочки, але остання літера завжди видима
+                            onFocus={() => handleFocus('input3')}
+                            onBlur={handleBlur}
+                            style={[styles.input, isInputFocused('input3') && styles.focusedInput]} 
+                            // onChangeText={onChangeText} або onChangeText={text => onChangeText(text)}
+                            // multiline={true}
+                            // numberOfLines={4}
+                            // maxLength={40}
+                            // value={value}
+                            // autoCorrect={true}
+                        />
+                        <TouchableOpacity style={{ position: 'absolute', right: 16, top: 14 }} onPress={handlePasswordClick}>       
+                            <Text style={styles.link}>
+                                { passwordVisible ? 'Приховати' : 'Показати' }    
+                            </Text>
+                        </TouchableOpacity>
 
-                    <TextInput 
-                        placeholder="Пароль" 
-                        placeholderTextColor='rgb(189, 189, 189)' 
-                        secureTextEntry={true} // приховане введення для паролів (крапочки, але остання літера завжди видима)
-                        style={[styles.input, isInputFocused('input3') && styles.focusedInput]} 
-                        onFocus={() => handleFocus('input3')}
-                        onBlur={handleBlur}
-                    />
-                    {/* onChangeText={onChangeText} 
-                    onChangeText={text => onChangeText(text)}
-                    multiline: true,
-                    numberOfLines={4}
-                    maxLength={40}
-                    value={value}
-                    autoCorrect: true, */}
-
-                    <Text>Показати</Text> 
-                    {/* onPress={onPressShow} */}
+                    </View>
                 </View>
+
+                {/* TouchableOpacity - тут це кнопка, бо Button нормально не стилізуєш. <TouchableHighlight> - не працює */}
+                {/* onPress={onPress} */}
+                <TouchableOpacity activeOpacity={0.6} style={styles.button}>       
+                    <Text style={styles.buttonText}>Зареєстуватися</Text>
+                </TouchableOpacity>
+                 
+                <View style={styles.container}>
+                    <Text style={styles.link}>
+                        Вже є акаунт? <Text style={[styles.link, isClicked && styles.linkClicked]} onPress={handleLinkClick}>Увійти</Text>
+                    </Text>
+                </View>
+
             </View>
         </View>
     );
@@ -89,44 +119,33 @@ const RegistrationScreen = () => {
             // <View style={styles.inner}>
 
 
-                {/* <View style={styles.btnContainer}> */}
-                {/* <Button
-                    onPress={onPressLearnMore}
-                    // onPress={() => Alert.alert('Right button pressed')}
-                    // onPress={() => null}
-                    title="Зареєстуватися"
-                    color="FF6C00" 
-                    accessibilityLabel="Press to sign up"
-                    disabled="true"
-                /> */}
-                {/* </View> */}
-
                 {/* <TouchableHighlight onPress={onPress}>  // кнопка при натисканні затемнюється
                     <View style={styles.button}>
                     <Text>Touch Here</Text>
                     </View>
                 </TouchableHighlight> */}
-                {/* button: {
-                    alignItems: 'center',
-                    backgroundColor: '#DDDDDD',
-                    padding: 10,
-                }, */}
 
-                {/* <Text>Вже є акаунт? Увійти</Text> */}
             // </View>
         {/* </TouchableWithoutFeedback> */}
     {/* </KeyboardAvoidingView> */}
 //     </View>
-//     )
 
 
     const styles = StyleSheet.create({
+        wrapper: {
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+        },
+        bgrImage: {
+            width: 375,
+            height: 549,        
+        },
         container: {
             // flex: 1,
             paddingHorizontal: 16,
             justifyContent: 'center',
         },
-        
         // inner: {
         //     padding: 24,
         //     flex: 1,
@@ -157,11 +176,28 @@ const RegistrationScreen = () => {
             backgroundColor: 'rgb(255, 255, 255)',
             borderColor: 'rgb(255, 108, 0)', 
         },
-
-        // btnContainer: {
-        //     backgroundColor: 'white',
-        //     marginTop: 12,
-        // },
+        button: {
+            backgroundColor: 'rgb(255, 108, 0)', 
+            paddingVertical: 16,
+            borderRadius: 100,
+            marginBottom: 16,
+        },
+        buttonText: {
+            fontFamily: 'Roboto',
+            fontSize: 16,
+            color: 'rgb(255, 255, 255)',
+            textAlign: 'center',
+        },
+        link: {
+            color: 'rgb(27, 67, 113)',
+            fontFamily: 'Roboto',
+            fontSize: 16,
+            textAlign: 'center',
+        },
+        linkClicked: {
+            color: 'rgba(27, 67, 113, 0.7)',
+            textDecorationLine: 'underline',
+        },
 
 
     //     fixToText: {
