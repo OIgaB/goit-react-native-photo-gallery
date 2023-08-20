@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, StatusBar, ImageBackground, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { View, StatusBar, ImageBackground, Image, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 
 
 const RegistrationScreen = () => {
@@ -39,6 +39,9 @@ const RegistrationScreen = () => {
                 
                 <View style={styles.container}>
                     <View style={styles.photoContainer}/>
+                    <TouchableOpacity>
+                        <Image source={require('./../assets/images/add.png')} style={styles.addImage} />
+                    </TouchableOpacity>
                     <View>
                         <Text style={styles.title}>Реєстрація</Text> 
                     </View>
@@ -133,7 +136,7 @@ const RegistrationScreen = () => {
 
     const styles = StyleSheet.create({
         wrapper: {
-            // flex: 1,
+            flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
         },
@@ -150,9 +153,9 @@ const RegistrationScreen = () => {
             resizeMode: 'cover',
         },
         container: {
-            // flex: 1,
+            flex: 1,
             top: 263,
-            bottom: 0,
+            // height: 549,
             paddingHorizontal: 16,
             justifyContent: 'center',
             backgroundColor: 'rgb(255, 255, 255)',
@@ -163,10 +166,17 @@ const RegistrationScreen = () => {
             width: 120,
             height: 120,
             top: -60,
+            // flex: 1,
+            alignItems: 'center',
             left: '50%',
-            transform: [{ translateX: -50 }],
+            transform: [{ translateX: -50 + -14 }],   // -50%    -14px
             borderRadius: 16,
             backgroundColor: 'rgb(246, 246, 246)',
+        },
+        addImage: { // плюсик
+            width: 25,
+            top: -105,
+            left: 233,
         },
         title: {
             textAlign: 'center',
@@ -216,17 +226,6 @@ const RegistrationScreen = () => {
             color: 'rgba(27, 67, 113, 0.7)',
             textDecorationLine: 'underline',
         },
-
-
-    //     fixToText: {
-    //       flexDirection: 'row',
-    //       justifyContent: 'space-between',
-    //     },
-    //     separator: {
-    //       marginVertical: 8,
-    //       borderBottomColor: '#737373',
-    //       borderBottomWidth: StyleSheet.hairlineWidth,
-    //     },
     });
 
 
