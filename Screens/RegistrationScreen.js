@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Image, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { View, StatusBar, ImageBackground, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 
 
 const RegistrationScreen = () => {
@@ -33,74 +33,74 @@ const RegistrationScreen = () => {
 
 
     return (
-        <View>
-
-            <View style={styles.wrapper}> 
-                <Image source={require('./../assets/images/background-img.jpg')} style={styles.bgrImage} />
-            </View>
-
-            <View style={styles.container}>
-                <View>
-                    <Text style={styles.title}>Реєстрація</Text> 
-                </View>
-                <View>
-                    <TextInput 
-                        placeholder="Логін" 
-                        placeholderTextColor='rgb(189, 189, 189)' 
-                        autoFocus={true}  // одразу в фокусі при відкритті додатку
-                        // clearButtonMode='always'  // кнопка очищення поля - тільки для iOS
-                        // enterKeyHint: done // у відповідь після заповнення покаже "done"- тільки для iOS
-                        style={[styles.input, isInputFocused('input1') && styles.focusedInput]} 
-                        onFocus={() => handleFocus('input1')}
-                        onBlur={handleBlur}
-                    />
-                        {/* onChangeText={onChangeText} */}
-                    <TextInput 
-                        placeholder="Адреса електронної пошти" 
-                        placeholderTextColor='rgb(189, 189, 189)' 
-                        keyboardType='email-address' 
-                        style={[styles.input, isInputFocused('input2') && styles.focusedInput]} 
-                        onFocus={() => handleFocus('input2')}
-                        onBlur={handleBlur}
-                    />
-                        {/* onChangeText={onChangeText} */}
-                    <View style={{position: 'relative'}}>
-                        <TextInput 
-                            placeholder="Пароль" 
-                            placeholderTextColor='rgb(189, 189, 189)'                         
-                            secureTextEntry={!passwordVisible} // secureTextEntry={true} - приховане введення для паролів (крапочки, але остання літера завжди видима
-                            onFocus={() => handleFocus('input3')}
-                            onBlur={handleBlur}
-                            style={[styles.input, isInputFocused('input3') && styles.focusedInput]} 
-                            // onChangeText={onChangeText} або onChangeText={text => onChangeText(text)}
-                            // multiline={true}
-                            // numberOfLines={4}
-                            // maxLength={40}
-                            // value={value}
-                            // autoCorrect={true}
-                        />
-                        <TouchableOpacity style={{ position: 'absolute', right: 16, top: 14 }} onPress={handlePasswordClick}>       
-                            <Text style={styles.link}>
-                                { passwordVisible ? 'Приховати' : 'Показати' }    
-                            </Text>
-                        </TouchableOpacity>
-
-                    </View>
-                </View>
-
-                {/* TouchableOpacity - тут це кнопка, бо Button нормально не стилізуєш. <TouchableHighlight> - не працює */}
-                {/* onPress={onPress} */}
-                <TouchableOpacity activeOpacity={0.6} style={styles.button}>       
-                    <Text style={styles.buttonText}>Зареєстуватися</Text>
-                </TouchableOpacity>
-                 
+        <View style={styles.wrapper}> 
+            <ImageBackground source={require('./../assets/images/background-img.jpg')} style={styles.bgrImage}>
+                <StatusBar translucent backgroundColor="transparent" barStyle="dark-content"/>
+                
                 <View style={styles.container}>
-                    <Text style={styles.link}>
-                        Вже є акаунт? <Text style={[styles.link, isClicked && styles.linkClicked]} onPress={handleLinkClick}>Увійти</Text>
-                    </Text>
-                </View>
+                    <View style={styles.photoContainer}/>
+                    <View>
+                        <Text style={styles.title}>Реєстрація</Text> 
+                    </View>
+                    <View>
+                        <TextInput 
+                            placeholder="Логін" 
+                            placeholderTextColor='rgb(189, 189, 189)' 
+                            autoFocus={true}  // одразу в фокусі при відкритті додатку
+                            // clearButtonMode='always'  // кнопка очищення поля - тільки для iOS
+                            // enterKeyHint: done // у відповідь після заповнення покаже "done"- тільки для iOS
+                            style={[styles.input, isInputFocused('input1') && styles.focusedInput]} 
+                            onFocus={() => handleFocus('input1')}
+                            onBlur={handleBlur}
+                        />
+                            {/* onChangeText={onChangeText} */}
+                        <TextInput 
+                            placeholder="Адреса електронної пошти" 
+                            placeholderTextColor='rgb(189, 189, 189)' 
+                            keyboardType='email-address' 
+                            style={[styles.input, isInputFocused('input2') && styles.focusedInput]} 
+                            onFocus={() => handleFocus('input2')}
+                            onBlur={handleBlur}
+                        />
+                            {/* onChangeText={onChangeText} */}
+                        <View style={{position: 'relative'}}>
+                            <TextInput 
+                                placeholder="Пароль" 
+                                placeholderTextColor='rgb(189, 189, 189)'                         
+                                secureTextEntry={!passwordVisible} // secureTextEntry={true} - приховане введення для паролів (крапочки, але остання літера завжди видима
+                                onFocus={() => handleFocus('input3')}
+                                onBlur={handleBlur}
+                                style={[styles.input, isInputFocused('input3') && styles.focusedInput]} 
+                                // onChangeText={onChangeText} або onChangeText={text => onChangeText(text)}
+                                // multiline={true}
+                                // numberOfLines={4}
+                                // maxLength={40}
+                                // value={value}
+                                // autoCorrect={true}
+                            />
+                            <TouchableOpacity style={{ position: 'absolute', right: 16, top: 14 }} onPress={handlePasswordClick}>       
+                                <Text style={styles.link}>
+                                    { passwordVisible ? 'Приховати' : 'Показати' }    
+                                </Text>
+                            </TouchableOpacity>
 
-            </View>
+                        </View>
+                    </View>
+
+                    {/* TouchableOpacity - тут це кнопка, бо Button нормально не стилізуєш. <TouchableHighlight> - не працює */}
+                    {/* onPress={onPress} */}
+                    <TouchableOpacity activeOpacity={0.6} style={styles.button}>       
+                        <Text style={styles.buttonText}>Зареєстуватися</Text>
+                    </TouchableOpacity>
+                    
+                    <View style={styles.container}>
+                        <Text style={styles.link}>
+                            Вже є акаунт? <Text style={[styles.link, isClicked && styles.linkClicked]} onPress={handleLinkClick}>Увійти</Text>
+                        </Text>
+                    </View>
+
+                </View>
+            </ImageBackground>
         </View>
     );
 }
@@ -133,24 +133,41 @@ const RegistrationScreen = () => {
 
     const styles = StyleSheet.create({
         wrapper: {
-            flex: 1,
+            // flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
         },
         bgrImage: {
-            width: 375,
-            height: 549,        
+            // width: 375,
+            // height: 549,  
+            // flex: 1,
+            // resizeMode: 'cover',
+            // justifyContent: 'flex-end',     
+            // flex: 1,
+            // justifyContent: 'center', 
+            width: '100%',
+            height: '100%',
+            resizeMode: 'cover',
         },
         container: {
             // flex: 1,
+            top: 263,
+            bottom: 0,
             paddingHorizontal: 16,
             justifyContent: 'center',
+            backgroundColor: 'rgb(255, 255, 255)',
+            borderTopLeftRadius: 25,
+            borderTopRightRadius: 25,
         },
-        // inner: {
-        //     padding: 24,
-        //     flex: 1,
-        //     justifyContent: 'space-around',
-        // },
+        photoContainer: {
+            width: 120,
+            height: 120,
+            top: -60,
+            left: '50%',
+            transform: [{ translateX: -50 }],
+            borderRadius: 16,
+            backgroundColor: 'rgb(246, 246, 246)',
+        },
         title: {
             textAlign: 'center',
             fontFamily: 'Roboto', 
@@ -159,8 +176,8 @@ const RegistrationScreen = () => {
             textShadowOffset: { width: 0, height: 4 }, // зміщення тіні по вертикалі
             textShadowRadius: 4, // радіус розмитості тіні
             textShadowColor: 'rgba(0, 0, 0, 0.25)', // прозорість тіні
+            marginTop: 32,
             marginBottom: 32,
-
         },
         input: {
             height: 50,
@@ -180,6 +197,7 @@ const RegistrationScreen = () => {
             backgroundColor: 'rgb(255, 108, 0)', 
             paddingVertical: 16,
             borderRadius: 100,
+            marginTop: 43,
             marginBottom: 16,
         },
         buttonText: {

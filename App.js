@@ -46,18 +46,18 @@ export default function App() {
     <View style={styles.container}>
 
       {/* лодер */}
-      <ActivityIndicator size="small" color="#0000ff" />   
+      {/* <ActivityIndicator size="small" color="#0000ff" />    */}
 
       {/* StatusBar - верхня панель з даними (заряд, інтернет...) */}
       {/* style="auto" - прозорий колір панелі, контент налазить на дані статус-бара */}
-      <StatusBar 
-        style="auto" 
+      {/* <StatusBar 
+        // style="auto" 
         // animated={true}
         // backgroundColor="#61dafb"
         // barStyle={statusBarStyle}
         // showHideTransition={statusBarTransition}
         // hidden={hidden} 
-      /> 
+      />  */}
 
       <RegistrationScreen />
       {/* <LoginScreen />
