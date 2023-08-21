@@ -1,6 +1,6 @@
 import { useState, useEffect, Fragment } from 'react';
 import { View, StatusBar, ImageBackground, Image, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback, Dimensions } from 'react-native';
-
+import userPhoto from '../assets/images/user-photo.jpg';
 
 const RegistrationScreen = () => {
     const [focusedInput, setFocusedInput] = useState(null);
@@ -65,10 +65,19 @@ const RegistrationScreen = () => {
 
                         {/* При видимій клавіатурі застосуються стилі styles.container, де властивість top буде замінена на 147 */}
                         <View style={[styles.container, keyboardStatus === 'Keyboard Shown' && { marginTop: 147 }]}> 
-                                                                                                                        
-                            <TouchableOpacity style={styles.photoContainer}> 
-                                <Image source={require('./../assets/images/add.png')} style={styles.addImage} />
-                            </TouchableOpacity>
+
+                            <View style={styles.photoContainer}>    
+                                { userPhoto && (
+                                    <Image style={styles.photo} source={userPhoto} />
+                                )}                 
+                                {/* onPress={addPhoto}*/}
+                                <TouchableOpacity> 
+                                    {userPhoto 
+                                    ? <Image source={require('./../assets/images/remove.png')} style={styles.addRemoveIcon} />
+                                    : <Image source={require('./../assets/images/add.png')} style={styles.addRemoveIcon} />
+                                    }    
+                                </TouchableOpacity>
+                            </View>
 
                             <View>
                                 <Text style={styles.title}>Реєстрація</Text> 
@@ -175,10 +184,20 @@ const RegistrationScreen = () => {
             borderRadius: 16,
             backgroundColor: 'rgb(246, 246, 246)',
         },
-        addImage: { // плюсик
+        photo: {
+            width: '100%',
+            height: '100%',
+            borderRadius: 16,
+            // resizeMode: 'cover',
+        },
+        addRemoveIcon: { // плюсик - хрестик
+            // position: 'absolute',
             width: 25,
-            top: 80,
-            right: -107,
+            height: 25,
+            bottom: 35,
+            left: 107,
+            // top: 80,
+            // right: -107,
         },
         title: {
             textAlign: 'center',
