@@ -1,3 +1,5 @@
+// import { NavigationContainer } from '@react-navigation/native';
+// import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, View, StyleSheet } from 'react-native';
@@ -29,6 +31,7 @@ import { RegistrationScreen } from './Screens/index.js'
     //       setStatusBarTransition(TRANSITIONS[transition]);
     //     }
     //   };
+// const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -43,38 +46,37 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container}>
+    // <NavigationContainer>
+      // <Stack.Navigator> - manages a stack of screens 
+      // <Stack.Navigator>
+        // <Stack.Screen name="Registration" component={RegistrationScreen} />
+        // <Stack.Screen name="Login" component={LoginScreen} />
+        //<Stack.Screen name="Posts" component={PostsScreen} /> 
 
-      {/* лодер */}
-      {/* <ActivityIndicator size="small" color="#0000ff" />    */}
+        <View style={{flex: 1}}> 
 
-      {/* StatusBar - верхня панель з даними (заряд, інтернет...) */}
-      {/* style="auto" - прозорий колір панелі, контент налазить на дані статус-бара */}
-      {/* <StatusBar 
-        // style="auto" 
-        // animated={true}
-        // backgroundColor="#61dafb"
-        // barStyle={statusBarStyle}
-        // showHideTransition={statusBarTransition}
-        // hidden={hidden} 
-      />  */}
+          {/* лодер */}
+          {/* <ActivityIndicator size="small" color="#0000ff" />    */}
 
-      <RegistrationScreen />
-      {/* <LoginScreen />
-      <PostsScreen /> */}
-    </View>
+          {/* StatusBar - верхня панель з даними (заряд, інтернет...) */}
+          {/* style="auto" - прозорий колір панелі, контент налазить на дані статус-бара */}
+          {/* <StatusBar 
+            // style="auto" 
+            // animated={true}
+            // backgroundColor="#61dafb"
+            // barStyle={statusBarStyle}
+            // showHideTransition={statusBarTransition}
+            // hidden={hidden} 
+          />  */}
+
+          <RegistrationScreen />
+          {/* <LoginScreen />
+          <PostsScreen /> */}
+        </View>      
+      // </Stack.Navigator>
+    // </NavigationContainer> 
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-  },
-});
-
 
 // html {
 //   font-family: 'lucida grande', tahoma, verdana, arial, sans-serif;

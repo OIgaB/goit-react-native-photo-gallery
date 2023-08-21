@@ -1,5 +1,5 @@
 import { useState, useEffect, Fragment } from 'react';
-import { View, StatusBar, ImageBackground, Image, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { View, StatusBar, ImageBackground, Image, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback, Dimensions } from 'react-native';
 
 
 const RegistrationScreen = () => {
@@ -53,12 +53,12 @@ const RegistrationScreen = () => {
         // при натисканні на екран, клавіатура ховається:
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}> 
             <View style={styles.wrapper}>
-                <ImageBackground source={require('./../assets/images/background-img.jpg')} style={styles.bgrImage}>
+                <ImageBackground source={require('./../assets/images/background-img.jpg')} resizeMode='cover' style={styles.bgrImage}>
                 
                     <StatusBar translucent backgroundColor="transparent" barStyle="dark-content"/>
                 
                     <KeyboardAvoidingView // автоматична підгонка висоти, розташування або нижнього паддінга компонента на основі висоти клавіатури, щоб компоненту залишатися видимим поки віртуальна клава відображена
-                        behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // padding - додається паддінг внизу контенту; height - зміна висоти компонента для підлаштування під доступний простір
+                        behavior={Platform.OS === 'ios' ? 'padding' : ''} // padding - додається паддінг внизу контенту; height - зміна висоти компонента для підлаштування під доступний простір
                         // keyboardVerticalOffset={-116} //- не працює - відстань між top екрану користувача та react native view - положення компонента буде скориговано вгору, коли відображається клавіатура
                         style={styles.keyboardAvoidingView}
                     >
@@ -146,18 +146,11 @@ const RegistrationScreen = () => {
     const styles = StyleSheet.create({
         wrapper: {
             flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
         },
         bgrImage: {
-            // width: 375,
-            // height: 549,  
-            // flex: 1,
-            // justifyContent: 'flex-end',     
-            // justifyContent: 'center', 
-            width: '100%',
-            height: '100%',
-            resizeMode: 'cover',
+            width: Dimensions.get('window').width,
+            height: Dimensions.get('window').height,
+            // resizeMode: 'stretch',
         },
         keyboardAvoidingView: {
             flex: 1,
@@ -167,7 +160,6 @@ const RegistrationScreen = () => {
             flex: 1,
             zIndex: 1,  
             marginTop: 263,
-            // height: 549,
             paddingHorizontal: 16,
             backgroundColor: 'rgb(255, 255, 255)',
             borderTopLeftRadius: 25,
