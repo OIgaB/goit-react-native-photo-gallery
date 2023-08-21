@@ -1,11 +1,28 @@
-import { useState } from 'react';
-import { View, StatusBar, ImageBackground, Image, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { useState, useEffect, Fragment } from 'react';
+import { View, StatusBar, ImageBackground, Image, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
 
 
 const RegistrationScreen = () => {
     const [focusedInput, setFocusedInput] = useState(null);
     const [isClicked, setIsClicked] = useState(false);
     const [passwordVisible, setPasswordVisible] = useState(false);
+    const [keyboardStatus, setKeyboardStatus] = useState('');
+
+    useEffect(() => {
+      const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+        setKeyboardStatus('Keyboard Shown');
+      });
+      const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+        setKeyboardStatus('Keyboard Hidden');
+      });
+  
+      return () => {
+        showSubscription.remove();  // метод remove відписується від прослуховування дій клавіатури - знімає event listener
+        hideSubscription.remove();
+      };
+    }, []);
+
+
 
     const handleFocus = (inputName) => {
       setFocusedInput(inputName);
@@ -32,107 +49,99 @@ const RegistrationScreen = () => {
     };
 
 
-    return (
-        <View style={styles.wrapper}> 
-            <ImageBackground source={require('./../assets/images/background-img.jpg')} style={styles.bgrImage}>
-                <StatusBar translucent backgroundColor="transparent" barStyle="dark-content"/>
+    return ( 
+        // при натисканні на екран, клавіатура ховається:
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}> 
+            <View style={styles.wrapper}>
+                <ImageBackground source={require('./../assets/images/background-img.jpg')} style={styles.bgrImage}>
                 
-                <View style={styles.container}>
-                    <View style={styles.photoContainer}/>
-                    <TouchableOpacity>
-                        <Image source={require('./../assets/images/add.png')} style={styles.addImage} />
-                    </TouchableOpacity>
-                    <View>
-                        <Text style={styles.title}>Реєстрація</Text> 
-                    </View>
-                    <View>
-                        <TextInput 
-                            placeholder="Логін" 
-                            placeholderTextColor='rgb(189, 189, 189)' 
-                            autoFocus={true}  // одразу в фокусі при відкритті додатку
-                            // clearButtonMode='always'  // кнопка очищення поля - тільки для iOS
-                            // enterKeyHint: done // у відповідь після заповнення покаже "done"- тільки для iOS
-                            style={[styles.input, isInputFocused('input1') && styles.focusedInput]} 
-                            onFocus={() => handleFocus('input1')}
-                            onBlur={handleBlur}
-                        />
-                            {/* onChangeText={onChangeText} */}
-                        <TextInput 
-                            placeholder="Адреса електронної пошти" 
-                            placeholderTextColor='rgb(189, 189, 189)' 
-                            keyboardType='email-address' 
-                            style={[styles.input, isInputFocused('input2') && styles.focusedInput]} 
-                            onFocus={() => handleFocus('input2')}
-                            onBlur={handleBlur}
-                        />
-                            {/* onChangeText={onChangeText} */}
-                        <View style={{position: 'relative'}}>
-                            <TextInput 
-                                placeholder="Пароль" 
-                                placeholderTextColor='rgb(189, 189, 189)'                         
-                                secureTextEntry={!passwordVisible} // secureTextEntry={true} - приховане введення для паролів (крапочки, але остання літера завжди видима
-                                onFocus={() => handleFocus('input3')}
-                                onBlur={handleBlur}
-                                style={[styles.input, isInputFocused('input3') && styles.focusedInput]} 
-                                // onChangeText={onChangeText} або onChangeText={text => onChangeText(text)}
-                                // multiline={true}
-                                // numberOfLines={4}
-                                // maxLength={40}
-                                // value={value}
-                                // autoCorrect={true}
-                            />
-                            <TouchableOpacity style={{ position: 'absolute', right: 16, top: 14 }} onPress={handlePasswordClick}>       
-                                <Text style={styles.link}>
-                                    { passwordVisible ? 'Приховати' : 'Показати' }    
-                                </Text>
+                    <StatusBar translucent backgroundColor="transparent" barStyle="dark-content"/>
+                
+                    <KeyboardAvoidingView // автоматична підгонка висоти, розташування або нижнього паддінга компонента на основі висоти клавіатури, щоб компоненту залишатися видимим поки віртуальна клава відображена
+                        behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // padding - додається паддінг внизу контенту; height - зміна висоти компонента для підлаштування під доступний простір
+                        // keyboardVerticalOffset={-116} //- не працює - відстань між top екрану користувача та react native view - положення компонента буде скориговано вгору, коли відображається клавіатура
+                        style={styles.keyboardAvoidingView}
+                    >
+
+                        {/* При видимій клавіатурі застосуються стилі styles.container, де властивість top буде замінена на 147 */}
+                        <View style={[styles.container, keyboardStatus === 'Keyboard Shown' && { marginTop: 147 }]}> 
+                                                                                                                        
+                            <TouchableOpacity style={styles.photoContainer}> 
+                                <Image source={require('./../assets/images/add.png')} style={styles.addImage} />
                             </TouchableOpacity>
 
+                            <View>
+                                <Text style={styles.title}>Реєстрація</Text> 
+                            </View>
+                            <View>
+                                <TextInput 
+                                    placeholder="Логін" 
+                                    placeholderTextColor='rgb(189, 189, 189)' 
+                                    autoFocus={true}  // одразу в фокусі при відкритті додатку
+                                    // clearButtonMode='always'  // кнопка очищення поля - тільки для iOS
+                                    // enterKeyHint: done // у відповідь після заповнення покаже "done"- тільки для iOS
+                                    style={[styles.input, isInputFocused('input1') && styles.focusedInput]} 
+                                    onFocus={() => handleFocus('input1')}
+                                    onBlur={handleBlur}
+                                    onSubmitEditing={Keyboard.dismiss} // при submit-і клавіатура зникає
+                                />
+                                    {/* onChangeText={onChangeText} */}
+                                <TextInput 
+                                    placeholder="Адреса електронної пошти" 
+                                    placeholderTextColor='rgb(189, 189, 189)' 
+                                    keyboardType='email-address' 
+                                    style={[styles.input, isInputFocused('input2') && styles.focusedInput]} 
+                                    onFocus={() => handleFocus('input2')}
+                                    onBlur={handleBlur}
+                                    onSubmitEditing={Keyboard.dismiss}
+                                />
+                                    {/* onChangeText={onChangeText} */}
+                                <View style={{position: 'relative'}}>
+                                    <TextInput 
+                                        placeholder="Пароль" 
+                                        placeholderTextColor='rgb(189, 189, 189)'                         
+                                        secureTextEntry={!passwordVisible} // secureTextEntry={true} - приховане введення для паролів (крапочки, але остання літера завжди видима
+                                        onFocus={() => handleFocus('input3')}
+                                        onBlur={handleBlur}
+                                        style={[styles.input, isInputFocused('input3') && styles.focusedInput]} 
+                                        onSubmitEditing={Keyboard.dismiss}
+                                        // onChangeText={onChangeText} або onChangeText={text => onChangeText(text)}
+                                        // multiline={true}
+                                        // numberOfLines={4}
+                                        // maxLength={40}
+                                        // value={value}
+                                        // autoCorrect={true}
+                                    />
+                                    <TouchableOpacity style={{ position: 'absolute', right: 16, top: 14 }} onPress={handlePasswordClick}>       
+                                        <Text style={styles.link}>
+                                            { passwordVisible ? 'Приховати' : 'Показати' }    
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+
+                            {/* TouchableOpacity - тут це кнопка, бо Button нормально не стилізуєш. <TouchableHighlight> (коли кнопка при натисканні затемнюється) - не працює */}
+                            {/* onPress={onPress} */}
+                            { keyboardStatus === 'Keyboard Hidden' && ( // React.Fragment замість <>...</>
+                                <Fragment> 
+                                    <TouchableOpacity activeOpacity={0.6} style={styles.button}>       
+                                        <Text style={styles.buttonText}>Зареєстуватися</Text>
+                                    </TouchableOpacity>
+                            
+                                    <View>
+                                        <Text style={styles.link}>
+                                            Вже є акаунт? <Text style={[styles.link, isClicked && styles.linkClicked]} onPress={handleLinkClick}>Увійти</Text>
+                                        </Text>
+                                    </View> 
+                                </Fragment>
+                            )} 
                         </View>
-                    </View>
-
-                    {/* TouchableOpacity - тут це кнопка, бо Button нормально не стилізуєш. <TouchableHighlight> - не працює */}
-                    {/* onPress={onPress} */}
-                    <TouchableOpacity activeOpacity={0.6} style={styles.button}>       
-                        <Text style={styles.buttonText}>Зареєстуватися</Text>
-                    </TouchableOpacity>
-                    
-                    <View style={styles.container}>
-                        <Text style={styles.link}>
-                            Вже є акаунт? <Text style={[styles.link, isClicked && styles.linkClicked]} onPress={handleLinkClick}>Увійти</Text>
-                        </Text>
-                    </View>
-
-                </View>
-            </ImageBackground>
-        </View>
+                    </KeyboardAvoidingView>
+                </ImageBackground>
+            </View>        
+        </TouchableWithoutFeedback>
     );
 }
-
-
-    // const [text, onChangeText] = React.useState('');
-
-    // return (
-    //     <View>
-    {/* <KeyboardAvoidingView // автоматична підгонка висоти, розташування або нижнього паддінга компонента на основі висоти клавіатури, щоб компоненту залишатися видимим поки віртуальна клава відображена
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
-    > */}
-        {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
-
-            // <View style={styles.inner}>
-
-
-                {/* <TouchableHighlight onPress={onPress}>  // кнопка при натисканні затемнюється
-                    <View style={styles.button}>
-                    <Text>Touch Here</Text>
-                    </View>
-                </TouchableHighlight> */}
-
-            // </View>
-        {/* </TouchableWithoutFeedback> */}
-    {/* </KeyboardAvoidingView> */}
-//     </View>
-
 
     const styles = StyleSheet.create({
         wrapper: {
@@ -144,39 +153,40 @@ const RegistrationScreen = () => {
             // width: 375,
             // height: 549,  
             // flex: 1,
-            // resizeMode: 'cover',
             // justifyContent: 'flex-end',     
-            // flex: 1,
             // justifyContent: 'center', 
             width: '100%',
             height: '100%',
             resizeMode: 'cover',
         },
-        container: {
+        keyboardAvoidingView: {
             flex: 1,
-            top: 263,
+        },
+        container: { // контейнер зі всім вмістом
+            position: 'relative',
+            flex: 1,
+            zIndex: 1,  
+            marginTop: 263,
             // height: 549,
             paddingHorizontal: 16,
-            justifyContent: 'center',
             backgroundColor: 'rgb(255, 255, 255)',
             borderTopLeftRadius: 25,
             borderTopRightRadius: 25,
         },
         photoContainer: {
+            position: 'absolute',
             width: 120,
             height: 120,
             top: -60,
-            // flex: 1,
-            alignItems: 'center',
             left: '50%',
-            transform: [{ translateX: -50 + -14 }],   // -50%    -14px
+            transform: [{ translateX: -50 }],   // -50%  
             borderRadius: 16,
             backgroundColor: 'rgb(246, 246, 246)',
         },
         addImage: { // плюсик
             width: 25,
-            top: -105,
-            left: 233,
+            top: 80,
+            right: -107,
         },
         title: {
             textAlign: 'center',
@@ -186,7 +196,7 @@ const RegistrationScreen = () => {
             textShadowOffset: { width: 0, height: 4 }, // зміщення тіні по вертикалі
             textShadowRadius: 4, // радіус розмитості тіні
             textShadowColor: 'rgba(0, 0, 0, 0.25)', // прозорість тіні
-            marginTop: 32,
+            marginTop: 92,
             marginBottom: 32,
         },
         input: {
@@ -198,6 +208,8 @@ const RegistrationScreen = () => {
             borderRadius: 8,
             paddingLeft: 16,
             marginBottom: 15,
+            fontFamily: 'Roboto',
+            fontSize: 16,
         },
         focusedInput: {
             backgroundColor: 'rgb(255, 255, 255)',
