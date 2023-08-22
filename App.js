@@ -3,7 +3,7 @@
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, View, StyleSheet } from 'react-native';
-import { RegistrationScreen } from './Screens/index.js'
+import { LoginScreen } from './Screens/index.js'
 // import { RegistrationScreen, LoginScreen, PostsScreen } from './Screens/RegistrationScreen.js'
 
     // const STYLES = ['default', 'dark-content', 'light-content'];
@@ -69,9 +69,9 @@ export default function App() {
             // hidden={hidden} 
           />  */}
 
-          <RegistrationScreen />
-          {/* <LoginScreen />
-          <PostsScreen /> */}
+          {/* <RegistrationScreen /> */}
+          <LoginScreen />
+          {/* <PostsScreen />  */}
         </View>      
       // </Stack.Navigator>
     // </NavigationContainer> 

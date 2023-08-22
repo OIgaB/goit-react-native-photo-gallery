@@ -3,10 +3,10 @@ import { View, StatusBar, ImageBackground, Image, Text, StyleSheet, TextInput, T
 import userPhoto from '../assets/images/user-photo.jpg';
 
 const RegistrationScreen = () => {
-    const [focusedInput, setFocusedInput] = useState(null);
-    const [isClicked, setIsClicked] = useState(false);
-    const [passwordVisible, setPasswordVisible] = useState(false);
     const [keyboardStatus, setKeyboardStatus] = useState('');
+    const [focusedInput, setFocusedInput] = useState(null);
+    const [passwordVisible, setPasswordVisible] = useState(false);
+    const [isClicked, setIsClicked] = useState(false);
 
     useEffect(() => {
       const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
