@@ -1,12 +1,18 @@
 import { useState, useEffect, Fragment } from 'react';
 import { View, StatusBar, ImageBackground, Image, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback, Dimensions } from 'react-native';
-import userPhoto from '../assets/images/user-photo.jpg';
+import * as ImagePicker from 'expo-image-picker'; // ImagePicker - object - provides various functions and options for interacting with the device's camera and photo library.
+import * as FileSystem from 'expo-file-system';
+// import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+// import userPhoto from '../assets/images/user-photo.jpg';
 
 const RegistrationScreen = () => {
     const [keyboardStatus, setKeyboardStatus] = useState('');
     const [focusedInput, setFocusedInput] = useState(null);
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [isClicked, setIsClicked] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
+
+    
 
     useEffect(() => {
       const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
@@ -15,7 +21,7 @@ const RegistrationScreen = () => {
       const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
         setKeyboardStatus('Keyboard Hidden');
       });
-  
+
       return () => {
         showSubscription.remove();  // метод remove відписується від прослуховування дій клавіатури - знімає event listener
         hideSubscription.remove();
@@ -48,6 +54,57 @@ const RegistrationScreen = () => {
         setPasswordVisible(false);
     };
 
+    
+    const generateUniqueFileName = () => {
+        const timestamp = new Date().getTime();
+        return `image_${timestamp}.jpg`;
+    };
+    // console.log("above - перерендер:", selectedImage)
+    useEffect(() => {
+        console.log("above - перерендер:", selectedImage);
+      }, [selectedImage]);
+
+
+
+    const openImagePicker = async () => {
+        
+        const result = await ImagePicker.launchImageLibraryAsync({ // launchImageLibraryAsync - function - launches the image picker UI on the device, allowing the user to select an image from their photo library. This function returns a promise that resolves with an object containing information about the selected image.
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        });
+       
+        if (!result.canceled) { 
+          //  Save the selected image to the file system
+          const fileName = generateUniqueFileName(); // Set your desired filename  - image_1692731915115.jpg
+
+          const imagePath = `${FileSystem.documentDirectory}avatars/${fileName}`; //file:///data/user/0/host.exp.exponent/files/avatars/image_1692739946018.jpg
+          // path (private directory - not visible) where you intend to save the selected image.
+
+          await FileSystem.copyAsync({ //copy a file from one location (phone) to another within your app's private file system
+            from: result.assets[0].uri, // result.assets - це масив з 1 об'єктом зображення [{"assetId": null, "base64": null, "duration": null, "exif": null, "height": 1600, "rotation": null, "type": "image", "uri": "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540anonymous%252Fphoto-gallery-ad271f2f-1ffd-4a6b-a4c1-b57b42c3d41c/ImagePicker/6fe3dbe5-22ad-4228-b8cb-80ae1fdb6e5d.jpeg", "width": 1200}]
+            to: imagePath,
+          }).then(() => {
+            console.log("imagePath in add", imagePath)
+            console.log("selectedImage before set", selectedImage)
+            setSelectedImage(imagePath);
+            console.log("selectedImage in the end of add", selectedImage)
+          });
+        
+        //   setSelectedImage(imagePath);
+        }
+    }; 
+    
+    const deleteImage = async () => {
+        if (selectedImage) {
+          try {
+            await FileSystem.deleteAsync(selectedImage);
+            setSelectedImage(null); 
+            console.log("selectedImage in the end of delete:", selectedImage) //file:///data/user/0/host.exp.exponent/files/avatars/image_1692746462821.jpg
+          } catch (error) {
+            console.error('Error deleting image:', error);
+          }
+        }
+    };
+
 
     return ( 
         // при натисканні на екран, клавіатура ховається:
@@ -66,17 +123,22 @@ const RegistrationScreen = () => {
                         {/* При видимій клавіатурі застосуються стилі styles.container, де властивість top буде замінена на 147 */}
                         <View style={[styles.container, keyboardStatus === 'Keyboard Shown' && { marginTop: 147 }]}> 
 
-                            <View style={styles.photoContainer}>    
-                                { userPhoto && (
-                                    <Image style={styles.photo} source={userPhoto} />
-                                )}                 
-                                {/* onPress={addPhoto}*/}
-                                <TouchableOpacity> 
-                                    {userPhoto 
-                                    ? <Image source={require('./../assets/images/remove.png')} style={styles.addRemoveIcon} />
-                                    : <Image source={require('./../assets/images/add.png')} style={styles.addRemoveIcon} />
-                                    }    
-                                </TouchableOpacity>
+                            <View style={styles.photoContainer}> 
+                                { !selectedImage && ( 
+                                    <TouchableOpacity onPress={openImagePicker}>
+                                        <Image source={require('./../assets/images/add.png')} style={styles.addRemoveIcon} />
+                                    </TouchableOpacity>
+                                    )
+                                }   
+                                { selectedImage && ( 
+                                    <> 
+                                    <Image style={styles.photo} source={{ uri: selectedImage }} />     
+                                    <TouchableOpacity onPress={deleteImage}> 
+                                        <Image source={require('./../assets/images/remove.png')} style={[styles.addRemoveIcon, {width: 35, height: 35, bottom: 40, left: 102} ]} />  
+                                    </TouchableOpacity>
+                                    </> 
+                                    )
+                                }  
                             </View>
 
                             <View>
@@ -87,14 +149,11 @@ const RegistrationScreen = () => {
                                     placeholder="Логін" 
                                     placeholderTextColor='rgb(189, 189, 189)' 
                                     autoFocus={true}  // одразу в фокусі при відкритті додатку
-                                    // clearButtonMode='always'  // кнопка очищення поля - тільки для iOS
-                                    // enterKeyHint: done // у відповідь після заповнення покаже "done"- тільки для iOS
                                     style={[styles.input, isInputFocused('input1') && styles.focusedInput]} 
                                     onFocus={() => handleFocus('input1')}
                                     onBlur={handleBlur}
                                     onSubmitEditing={Keyboard.dismiss} // при submit-і клавіатура зникає
                                 />
-                                    {/* onChangeText={onChangeText} */}
                                 <TextInput 
                                     placeholder="Адреса електронної пошти" 
                                     placeholderTextColor='rgb(189, 189, 189)' 
@@ -104,7 +163,6 @@ const RegistrationScreen = () => {
                                     onBlur={handleBlur}
                                     onSubmitEditing={Keyboard.dismiss}
                                 />
-                                    {/* onChangeText={onChangeText} */}
                                 <View style={{position: 'relative'}}>
                                     <TextInput 
                                         placeholder="Пароль" 
@@ -114,12 +172,6 @@ const RegistrationScreen = () => {
                                         onBlur={handleBlur}
                                         style={[styles.input, isInputFocused('input3') && styles.focusedInput]} 
                                         onSubmitEditing={Keyboard.dismiss}
-                                        // onChangeText={onChangeText} або onChangeText={text => onChangeText(text)}
-                                        // multiline={true}
-                                        // numberOfLines={4}
-                                        // maxLength={40}
-                                        // value={value}
-                                        // autoCorrect={true}
                                     />
                                     <TouchableOpacity style={{ position: 'absolute', right: 16, top: 14 }} onPress={handlePasswordClick}>       
                                         <Text style={styles.link}>
@@ -130,7 +182,6 @@ const RegistrationScreen = () => {
                             </View>
 
                             {/* TouchableOpacity - тут це кнопка, бо Button нормально не стилізуєш. <TouchableHighlight> (коли кнопка при натисканні затемнюється) - не працює */}
-                            {/* onPress={onPress} */}
                             { keyboardStatus === 'Keyboard Hidden' && ( // React.Fragment замість <>...</>
                                 <Fragment> 
                                     <TouchableOpacity activeOpacity={0.6} style={styles.button}>       
@@ -159,7 +210,6 @@ const RegistrationScreen = () => {
         bgrImage: {
             width: Dimensions.get('window').width,
             height: Dimensions.get('window').height,
-            // resizeMode: 'stretch',
         },
         keyboardAvoidingView: {
             flex: 1,
@@ -188,16 +238,12 @@ const RegistrationScreen = () => {
             width: '100%',
             height: '100%',
             borderRadius: 16,
-            // resizeMode: 'cover',
         },
         addRemoveIcon: { // плюсик - хрестик
-            // position: 'absolute',
             width: 25,
             height: 25,
-            bottom: 35,
-            left: 107,
-            // top: 80,
-            // right: -107,
+            top: 80,
+            right: -107,
         },
         title: {
             textAlign: 'center',

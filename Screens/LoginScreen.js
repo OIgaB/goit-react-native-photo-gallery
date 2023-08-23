@@ -69,9 +69,9 @@ const LoginScreen = () => {
                                 <Text style={styles.title}>Увійти</Text> 
                             </View>
                             <View>
-                                    {/* onChangeText={onChangeText} */}
                                 <TextInput 
                                     placeholder="Адреса електронної пошти" 
+                                    autoFocus={true}  // одразу в фокусі при відкритті додатку
                                     placeholderTextColor='rgb(189, 189, 189)' 
                                     keyboardType='email-address' 
                                     style={[styles.input, isInputFocused('input2') && styles.focusedInput]} 
@@ -79,7 +79,6 @@ const LoginScreen = () => {
                                     onBlur={handleBlur}
                                     onSubmitEditing={Keyboard.dismiss}
                                 />
-                                    {/* onChangeText={onChangeText} */}
                                 <View style={{position: 'relative'}}>
                                     <TextInput 
                                         placeholder="Пароль" 
@@ -89,12 +88,6 @@ const LoginScreen = () => {
                                         onBlur={handleBlur}
                                         style={[styles.input, isInputFocused('input3') && styles.focusedInput]} 
                                         onSubmitEditing={Keyboard.dismiss}
-                                        // onChangeText={onChangeText} або onChangeText={text => onChangeText(text)}
-                                        // multiline={true}
-                                        // numberOfLines={4}
-                                        // maxLength={40}
-                                        // value={value}
-                                        // autoCorrect={true}
                                     />
                                     <TouchableOpacity style={{ position: 'absolute', right: 16, top: 14 }} onPress={handlePasswordClick}>       
                                         <Text style={styles.link}>
@@ -105,7 +98,6 @@ const LoginScreen = () => {
                             </View>
 
                             {/* TouchableOpacity - тут це кнопка, бо Button нормально не стилізуєш. <TouchableHighlight> (коли кнопка при натисканні затемнюється) - не працює */}
-                            {/* onPress={onPress} */}
                             { keyboardStatus === 'Keyboard Hidden' && ( // React.Fragment замість <>...</>
                                 <Fragment> 
                                     <TouchableOpacity activeOpacity={0.6} style={styles.button}>       
@@ -114,7 +106,7 @@ const LoginScreen = () => {
                             
                                     <View>
                                         <Text style={styles.link}>
-                                            Вже є акаунт? <Text style={[styles.link, isClicked && styles.linkClicked]} onPress={handleLinkClick}>Увійти</Text>
+                                            Немає акаунту? <Text style={[styles.link, isClicked && styles.linkClicked]} onPress={handleLinkClick}>Зареєстуватися</Text>
                                         </Text>
                                     </View> 
                                 </Fragment>
@@ -134,7 +126,6 @@ const LoginScreen = () => {
         bgrImage: {
             width: Dimensions.get('window').width,
             height: Dimensions.get('window').height,
-            // resizeMode: 'stretch',
         },
         keyboardAvoidingView: {
             flex: 1,
