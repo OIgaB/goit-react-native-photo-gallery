@@ -1,8 +1,7 @@
 import { useState, useEffect, Fragment } from 'react';
-import { View, StatusBar, ImageBackground, Image, Text, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback, Dimensions } from 'react-native';
+import { View, StatusBar, ImageBackground, Image, Text, Pressable, StyleSheet, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback, Dimensions } from 'react-native';
 import * as ImagePicker from 'expo-image-picker'; // ImagePicker - object - provides various functions and options for interacting with the device's camera and photo library.
 import * as FileSystem from 'expo-file-system';
-// import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 // import userPhoto from '../assets/images/user-photo.jpg';
 
 const RegistrationScreen = () => {
@@ -59,12 +58,6 @@ const RegistrationScreen = () => {
         const timestamp = new Date().getTime();
         return `image_${timestamp}.jpg`;
     };
-    // console.log("above - перерендер:", selectedImage)
-    useEffect(() => {
-        console.log("above - перерендер:", selectedImage);
-      }, [selectedImage]);
-
-
 
     const openImagePicker = async () => {
         
@@ -82,14 +75,9 @@ const RegistrationScreen = () => {
           await FileSystem.copyAsync({ //copy a file from one location (phone) to another within your app's private file system
             from: result.assets[0].uri, // result.assets - це масив з 1 об'єктом зображення [{"assetId": null, "base64": null, "duration": null, "exif": null, "height": 1600, "rotation": null, "type": "image", "uri": "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540anonymous%252Fphoto-gallery-ad271f2f-1ffd-4a6b-a4c1-b57b42c3d41c/ImagePicker/6fe3dbe5-22ad-4228-b8cb-80ae1fdb6e5d.jpeg", "width": 1200}]
             to: imagePath,
-          }).then(() => {
-            console.log("imagePath in add", imagePath)
-            console.log("selectedImage before set", selectedImage)
-            setSelectedImage(imagePath);
-            console.log("selectedImage in the end of add", selectedImage)
-          });
-        
-        //   setSelectedImage(imagePath);
+          })
+       
+          setSelectedImage(imagePath);
         }
     }; 
     
@@ -98,7 +86,6 @@ const RegistrationScreen = () => {
           try {
             await FileSystem.deleteAsync(selectedImage);
             setSelectedImage(null); 
-            console.log("selectedImage in the end of delete:", selectedImage) //file:///data/user/0/host.exp.exponent/files/avatars/image_1692746462821.jpg
           } catch (error) {
             console.error('Error deleting image:', error);
           }
@@ -124,23 +111,24 @@ const RegistrationScreen = () => {
                         <View style={[styles.container, keyboardStatus === 'Keyboard Shown' && { marginTop: 147 }]}> 
 
                             <View style={styles.photoContainer}> 
-                                { !selectedImage && ( 
-                                    <TouchableOpacity onPress={openImagePicker}>
+                            { !selectedImage && ( 
+                                <>
+                                    <Pressable onPress={openImagePicker} style={styles.buttonWrapper} >
                                         <Image source={require('./../assets/images/add.png')} style={styles.addRemoveIcon} />
-                                    </TouchableOpacity>
-                                    )
-                                }   
-                                { selectedImage && ( 
-                                    <> 
+                                    </Pressable>                             
+                                </>
+                                )
+                            }
+                            { selectedImage && ( 
+                                <> 
                                     <Image style={styles.photo} source={{ uri: selectedImage }} />     
-                                    <TouchableOpacity onPress={deleteImage}> 
-                                        <Image source={require('./../assets/images/remove.png')} style={[styles.addRemoveIcon, {width: 35, height: 35, bottom: 40, left: 102} ]} />  
-                                    </TouchableOpacity>
-                                    </> 
-                                    )
-                                }  
+                                    <Pressable onPress={deleteImage} style={[styles.buttonWrapper, {top: -40, left: 107}]} > 
+                                        <Image source={require('./../assets/images/remove.png')} style={[styles.addRemoveIcon, {width: 35, height: 35, top: -6, left: -6}]} />  
+                                    </Pressable>
+                                </> 
+                                )
+                            } 
                             </View>
-
                             <View>
                                 <Text style={styles.title}>Реєстрація</Text> 
                             </View>
@@ -242,8 +230,14 @@ const RegistrationScreen = () => {
         addRemoveIcon: { // плюсик - хрестик
             width: 25,
             height: 25,
-            top: 80,
+        },
+        buttonWrapper: {
+            zIndex: 2, 
+            width: 25,
+            height: 25,
+            borderRadius: 70,
             right: -107,
+            top: 80,
         },
         title: {
             textAlign: 'center',
